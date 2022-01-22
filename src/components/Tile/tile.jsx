@@ -4,8 +4,7 @@ import "./tile.css"
 //🚩💣
 function Tile(props) {
     //flagged bomb discovered neighbours
-
-    let theme = props.value[2] ? "tile discovered" : "tile undiscovered"
+    let theme = props.value[2] ? "tile discovered unselectable" : "tile undiscovered unselectable"
 
     let content
     if(props.value[2]) { // if discovered

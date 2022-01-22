@@ -1,8 +1,45 @@
 import React, { useState, useEffect, useReducer } from "react";
 import Board from "../components/Board/board";
+
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 import "../index.css"
 
-const BOMBS = 10
+let BOMBS = 10
+let diffVal = 0
+
+const DIFFICULTY = [
+  {
+    value: 0,
+    label: "Easy",
+    size: [8, 8],
+    style: 'E grid grid-cols-8',
+    bombs: 10
+  },
+  {
+    value: 1,
+    label: "MEDIUM",
+    size: [16, 16],
+    style: 'M',
+    bombs: 40
+  },
+  {
+    value: 2,
+    label: "HARD",
+    size: [16, 30],
+    style: 'H',
+    bombs: 99
+  }
+]
+
+function valuetext(value) {
+  diffVal = DIFFICULTY[value].value
+  BOMBS = DIFFICULTY[value].bombs
+}
+
+function valueLabelFormat(value) {
+  return DIFFICULTY[value].label
+}
 
 function Game() {
   //Array.from(Array(2), () => new Array(4))
@@ -14,8 +51,10 @@ function Game() {
   const [WIN, setWIN] = useState(null)
 
   function revealTileAndTilesAround(i) {
-    let row = Math.floor(i / 8)
-    let col = i % 8
+    let rowSize = DIFFICULTY[diffVal].size[0]
+    let colSize = DIFFICULTY[diffVal].size[1]
+    let row = Math.floor(i / rowSize)
+    let col = i % colSize
 
     //self
     if(!tiles[i][0]) { // dont reveal tile if it is flagged
@@ -26,9 +65,9 @@ function Game() {
     if(tiles[i][3] === 0) {
       for (let r = -1; r <= 1; r++) {
         for (let c = -1; c <= 1; c++) {
-          let position = ((row+r) * 8 + col+c) // flatten the array again
+          let position = ((row+r) * rowSize + col+c) // flatten the array again
           let notSelf = (r !== 0 || c !== 0) // not pointing on it self
-          let indexInBounds = 0 <= row+r && row+r <= 7 && 0 <= col+c && col+c <= 7 // check if the index is in bounds
+          let indexInBounds = 0 <= row+r && row+r <= (rowSize-1) && 0 <= col+c && col+c <= (colSize-1) // check if the index is in bounds
 
           if(indexInBounds && notSelf) {  // compare all limits
             if(!tiles[position][2]) { // check if tile is not found
@@ -63,7 +102,7 @@ function Game() {
   }
 
   function revealBombs() {
-    for(let i = 0; i < 64; i++) {
+    for(let i = 0; i < tiles.length; i++) {
       if(tiles[i][1] && !tiles[i][2]) { // if tile is bomb and is not discovered
         if(!tiles[i][0]){ // not flagged
           tiles[i][2] = true // reveal tile
@@ -79,7 +118,7 @@ function Game() {
   }
 
   function handleLeftClick(i) {
-    if(!tiles[i][0]) {
+    if(!tiles[i][0] && !WIN) {
       if(tiles[i][1]) {
         revealBombs()
         tiles[i][3] = "💥"
@@ -94,14 +133,19 @@ function Game() {
   
   function handleRightClick(i, e) {
     e.preventDefault()
-    flagTile(i)
+    if(!WIN){
+      flagTile(i)
+    }
 
     forceUpdate()
   }
 
   function restart() {
-    setTiles(Array.from(Array(64), () => Array.from([false, false, false, 0])))
+    let size = DIFFICULTY[diffVal].size
+    let sum = size[0] * size[1]
+    setTiles(Array.from(Array(sum), () => Array.from([false, false, false, 0])))
     setFlags(BOMBS)
+    setCG(0)
     setWIN(null)
   }
 
@@ -131,16 +175,19 @@ function Game() {
     }
   
     function findCloseBombs() {
-      for(let i = 0; i < 64; i++) {
-        let row = Math.floor(i / 8)
-        let col = i % 8
+      let rowSize = DIFFICULTY[diffVal].size[0]
+      let colSize = DIFFICULTY[diffVal].size[1]
+
+      for(let i = 0; i < tiles.length; i++) {
+        let row = Math.floor(i / rowSize)
+        let col = i % colSize
   
         let count = 0
         for (let r = -1; r <= 1; r++) {
           for (let c = -1; c <= 1; c++) {
-            let position = ((row+r) * 8 + col+c) // flatten the array again
+            let position = ((row+r) * rowSize + col+c) // flatten the array again
             let notSelf = (r !== 0 || c !== 0) // not pointing on it self
-            let indexInBounds = 0 <= row+r && row+r <= 7 && 0 <= col+c && col+c <= 7 // check if the index is in bounds
+            let indexInBounds = 0 <= row+r && row+r <= (rowSize-1) && 0 <= col+c && col+c <= (rowSize-1) // check if the index is in bounds
 
             if(indexInBounds && notSelf) {  // compare all limits
               if(tiles[position][1]) { 
@@ -161,26 +208,44 @@ function Game() {
 
   return (
     <div className="w-screen h-screen">
-      <div className="centerItems">
-        <h1>Game of minesweeper</h1>
-      </div>
+      <div className="sideBar"> {/* side bar */}
+        <div className="centerItems"> {/* Win */}
+          <h1 className="Win">{WIN}</h1>
+        </div>
 
-      <div className="centerItems">
-        <h2>{"Mines left: " + String(Flags)}</h2>
-      </div>
+        <div className="centerItems"> {/* Slider */}
+          <Box sx={{ width: 300 }}>
+            <Slider
+              aria-label="Difficulty"
+              defaultValue={0}
+              valueLabelFormat={valueLabelFormat}
+              getAriaValueText={valuetext}
+              step={1}
+              valueLabelDisplay="auto"
+              //marks={DIFFICULTY}
+              min={0}
+              max={2}
+            />
+          </Box>
+        </div>
 
-      <div className="centerItems">
-        <div className="BOARD grid grid-rows-8 grid-cols-8">
-          <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
+        <div className="centerItems"> {/* Restart */}
+          <button className="Button" onClick={restart}>Restart</button>
         </div>
       </div>
-      
-      <div className="centerItems">
-        <h2>{WIN}</h2>
+
+      <div className="centerItems"> {/* Title */}
+        <h1 className="Title unselectable">Game of minesweeper</h1>
       </div>
 
-      <div className="centerItems">
-        <button className="Button" onClick={restart}>Restart</button>
+      <div className="centerItems"> {/* Mines */}
+        <h1 className="Mines unselectable">{"Mines left: " + String(Flags)}</h1>
+      </div>
+
+      <div className="centerItems"> {/* Board */}
+        <div className={DIFFICULTY[diffVal].style}>
+          <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
+        </div>
       </div>
     </div>
   );

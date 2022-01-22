@@ -6,10 +6,44 @@
   @apply flex justify-center items-center
 }
 
-.BOARD {
-  @apply w-1/6 h-2/6 min-w-max
+.sideBar {
+  @apply fixed bottom-3 left-7
 }
 
-.Button {
-  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 border border-blue-700 rounded
+.BOARD {
+  @apply absolute h-mediumCustom w-1/6 min-w-max
+}
+
+.E {
+  @apply BOARD 
+}
+
+/* flex-shrink-0 is to prevent horizontal scroll */
+.M {
+  @apply BOARD scale-55 grid grid-cols-16
+}
+
+/* scale change to fit on screen */
+.H { 
+  @apply BOARD scale-55 flex-shrink-0 grid grid-cols-30  
+}
+
+.Button { 
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 border border-blue-700 rounded 
+          lg:text-2xl
+}
+
+.Title {
+  @apply text-2xl
+        lg:text-4xl
+}
+
+.Mines {
+  @apply text-xl py-5 
+        lg:text-3xl
+}
+
+.Win {
+  @apply text-2xl pt-2 pb-4 
+        lg:text-3xl
 }

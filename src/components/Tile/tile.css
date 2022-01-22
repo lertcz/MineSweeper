@@ -7,5 +7,19 @@
 }
 
 .tile {
-    @apply w-8 h-8 p-1 rounded m-1
+    @apply w-8 h-8 p-1 rounded m-1 
+        lg:w-12 lg:h-12 lg:text-3xl
+}
+
+*.unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in Internet Explorer 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }
