@@ -15,7 +15,7 @@
 }
 
 .E {
-  @apply BOARD scale-110
+  @apply BOARD scale-110 grid grid-cols-8
 }
 
 /* scale change to fit on screen */
@@ -45,5 +45,5 @@
 }
 
 .Win {
-  @apply absolute bottom-24 text-2xl pt-2 pb-4 text-white font-bold py-1 px-4 border-4 border-black rounded opacity-75
+  @apply absolute bottom-24 text-2xl pt-2 pb-4 text-white font-bold py-1 px-4 border-4 border-black rounded opacity-90
 }

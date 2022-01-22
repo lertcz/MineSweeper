@@ -14,7 +14,7 @@ const DIFFICULTY = [
     value: 0,
     label: "Easy",
     size: [8, 8],
-    style: 'E grid grid-cols-8',
+    style: 'E',
     bombs: 10
   },
   {
@@ -249,7 +249,7 @@ function Game() {
               valueLabelDisplay="auto"
               //marks={DIFFICULTY}
               min={0}
-              max={2}
+              max={DIFFICULTY.length-1}
             />
           </Box>
         </div>
