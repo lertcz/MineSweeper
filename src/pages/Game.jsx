@@ -7,7 +7,7 @@ const BOMBS = 10
 function Game() {
   //Array.from(Array(2), () => new Array(4))
   //2 and 4 being first and second dimensions respectively.
-  const [tiles] = useState( Array.from(Array(64), () => Array.from([false, false, false, 0]) ) ) //flagged bomb discovered neighbours
+  const [tiles, setTiles] = useState( Array.from(Array(64), () => Array.from([false, false, false, 0]) ) ) //flagged bomb discovered neighbours
   const [, forceUpdate] = useReducer(x => x + 1, 0)
   const [Flags, setFlags] = useState(BOMBS)
   const [correctGuess, setCG] = useState(0)
@@ -100,7 +100,9 @@ function Game() {
   }
 
   function restart() {
-
+    setTiles(Array.from(Array(64), () => Array.from([false, false, false, 0])))
+    setFlags(BOMBS)
+    setWIN(null)
   }
 
   //display if the player win the game
@@ -164,7 +166,7 @@ function Game() {
       </div>
 
       <div className="centerItems">
-        <h2>{"Mines left: " + String(Flags) + " " + String(correctGuess)}</h2>
+        <h2>{"Mines left: " + String(Flags)}</h2>
       </div>
 
       <div className="centerItems">
