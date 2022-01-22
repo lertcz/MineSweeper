@@ -7,7 +7,7 @@
 }
 
 .sideBar {
-  @apply fixed bottom-3 left-7
+  @apply fixed bottom-3 left-1/2 transform -translate-x-1/2
 }
 
 .BOARD {
@@ -15,17 +15,18 @@
 }
 
 .E {
-  @apply BOARD 
+  @apply BOARD scale-110
 }
 
-/* flex-shrink-0 is to prevent horizontal scroll */
+/* scale change to fit on screen */
 .M {
   @apply BOARD scale-55 grid grid-cols-16
 }
 
-/* scale change to fit on screen */
+/* flex-shrink-0 is to prevent horizontal scroll */
 .H { 
-  @apply BOARD scale-55 flex-shrink-0 grid grid-cols-30  
+  @apply BOARD scale-55 flex-shrink-0 grid grid-cols-16
+                                        lg:grid-cols-30  
 }
 
 .Button { 
@@ -44,6 +45,5 @@
 }
 
 .Win {
-  @apply text-2xl pt-2 pb-4 
-        lg:text-3xl
+  @apply absolute bottom-24 text-2xl pt-2 pb-4 text-white font-bold py-1 px-4 border-4 border-black rounded opacity-75
 }

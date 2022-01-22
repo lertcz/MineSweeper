@@ -3,6 +3,7 @@ import Board from "../components/Board/board";
 
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import "../index.css"
 
 let BOMBS = 10
@@ -53,7 +54,7 @@ function Game() {
   function revealTileAndTilesAround(i) {
     let rowSize = DIFFICULTY[diffVal].size[0]
     let colSize = DIFFICULTY[diffVal].size[1]
-    let row = Math.floor(i / rowSize)
+    let row = Math.floor(i / colSize)
     let col = i % colSize
 
     //self
@@ -65,7 +66,7 @@ function Game() {
     if(tiles[i][3] === 0) {
       for (let r = -1; r <= 1; r++) {
         for (let c = -1; c <= 1; c++) {
-          let position = ((row+r) * rowSize + col+c) // flatten the array again
+          let position = ((row+r) * colSize + col+c) // flatten the array again
           let notSelf = (r !== 0 || c !== 0) // not pointing on it self
           let indexInBounds = 0 <= row+r && row+r <= (rowSize-1) && 0 <= col+c && col+c <= (colSize-1) // check if the index is in bounds
 
@@ -179,17 +180,16 @@ function Game() {
       let colSize = DIFFICULTY[diffVal].size[1]
 
       for(let i = 0; i < tiles.length; i++) {
-        let row = Math.floor(i / rowSize)
+        let row = Math.floor(i / colSize)
         let col = i % colSize
   
         let count = 0
         for (let r = -1; r <= 1; r++) {
           for (let c = -1; c <= 1; c++) {
-            let position = ((row+r) * rowSize + col+c) // flatten the array again
-            let notSelf = (r !== 0 || c !== 0) // not pointing on it self
-            let indexInBounds = 0 <= row+r && row+r <= (rowSize-1) && 0 <= col+c && col+c <= (rowSize-1) // check if the index is in bounds
-
-            if(indexInBounds && notSelf) {  // compare all limits
+            let position = ((row+r) * colSize + col+c) // flatten the array again
+            //let notSelf = (r !== 0 || c !== 0) // not pointing on it self
+            let indexInBounds = 0 <= row+r && row+r <= (rowSize-1) && 0 <= col+c && col+c <= (colSize-1) // check if the index is in bounds
+            if(indexInBounds) {  // compare all limits
               if(tiles[position][1]) { 
                 count += 1
               }
@@ -208,10 +208,35 @@ function Game() {
 
   return (
     <div className="w-screen h-screen">
-      <div className="sideBar"> {/* side bar */}
-        <div className="centerItems"> {/* Win */}
-          <h1 className="Win">{WIN}</h1>
+      
+      <div className="absolute bottom-3 right-3 align-middle"> {/* Creator info */}
+        <div className="centerItems">
+          <GitHubIcon
+          className="hover:scale-125"
+          onClick={() => window.open("https://github.com/lertcz/MineSweeper")}
+          />
+
+          <h1 className="text-xs pl-4">
+            Created by Michal Šesták
+          </h1>
         </div>
+      </div>
+
+      <div className="centerItems"> {/* Title */}
+        <h1 className="Title unselectable">Game of minesweeper</h1>
+      </div>
+
+      <div className="centerItems"> {/* Mines */}
+        <h1 className="Mines unselectable">{"Mines left: " + String(Flags)}</h1>
+      </div>
+
+      <div className="centerItems"> {/* Board */}
+        <div className={DIFFICULTY[diffVal].style}>
+          <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
+        </div>
+      </div>
+      
+      <div className="sideBar"> {/* side bar */}
 
         <div className="centerItems"> {/* Slider */}
           <Box sx={{ width: 300 }}>
@@ -232,19 +257,10 @@ function Game() {
         <div className="centerItems"> {/* Restart */}
           <button className="Button" onClick={restart}>Restart</button>
         </div>
-      </div>
-
-      <div className="centerItems"> {/* Title */}
-        <h1 className="Title unselectable">Game of minesweeper</h1>
-      </div>
-
-      <div className="centerItems"> {/* Mines */}
-        <h1 className="Mines unselectable">{"Mines left: " + String(Flags)}</h1>
-      </div>
-
-      <div className="centerItems"> {/* Board */}
-        <div className={DIFFICULTY[diffVal].style}>
-          <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
+        
+        <div className="centerItems"> {/* Win */}
+          {/* set syle if you won or lost the game */}
+          <h1 className={WIN ? (WIN === "You won!" ? "Win bg-green-500" : "Win bg-red-600") : ""}>{WIN}</h1>
         </div>
       </div>
     </div>
