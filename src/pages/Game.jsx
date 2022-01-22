@@ -11,6 +11,7 @@ function Game() {
   const [, forceUpdate] = useReducer(x => x + 1, 0)
   const [Flags, setFlags] = useState(BOMBS)
   const [correctGuess, setCG] = useState(0)
+  const [WIN, setWIN] = useState(null)
 
   function revealTileAndTilesAround(i) {
     let row = Math.floor(i / 8)
@@ -44,19 +45,19 @@ function Game() {
       tiles[i][0] = !tiles[i][0]
 
       // change flag count
-      if(tiles[i][0]) { 
-        setFlags(Flags - 1)
+      if(!tiles[i][0]) { //not flagged
+        setFlags(Flags + 1)
+
+        if(tiles[i][1]) { // increment correct guesses if tile is a bomb
+          setCG(correctGuess - 1)
+        }
       }
       else {
-        setFlags(Flags + 1)
-      }
+        setFlags(Flags - 1)
 
-      // correct flag placement
-      if(tiles[i][0] && tiles[i][1]) { // increment correct guesses if tile is bomb
-        setCG(correctGuess + 1)
-      }
-      else if(!tiles[i][0] && tiles[i][1]) { // decrement correct guesses if the flag is removed
-        setCG(correctGuess - 1)
+        if(tiles[i][1]) { // decrement correct guesses if tile is a bomb
+          setCG(correctGuess + 1)
+        }
       }
     }
   }
@@ -74,19 +75,14 @@ function Game() {
         tiles[i][3] = "❌"
       }
     }
-    alert("You lost the game\nrestart the page")
-  }
-
-  function checkIfPlayerWin() {
-    if(correctGuess === BOMBS-1) {
-      alert("You won the game\nrestart the page")
-    }
+    setWIN("You lost!")
   }
 
   function handleLeftClick(i) {
     if(!tiles[i][0]) {
       if(tiles[i][1]) {
         revealBombs()
+        tiles[i][3] = "💥"
       }
       else{
         revealTileAndTilesAround(i)
@@ -100,10 +96,23 @@ function Game() {
     e.preventDefault()
     flagTile(i)
 
-    checkIfPlayerWin()
-
     forceUpdate()
   }
+
+  function restart() {
+
+  }
+
+  //display if the player win the game
+  useEffect(() => {
+    function checkIfPlayerWin() {
+      if(correctGuess === BOMBS && Flags === 0) {
+        setWIN("You won!")
+      }
+    }
+
+    checkIfPlayerWin()
+  },[Flags, correctGuess]);
 
   useEffect(() => {
     function plantBombs(bombCount) {
@@ -155,13 +164,21 @@ function Game() {
       </div>
 
       <div className="centerItems">
-        <h2>{"Mines left: " + String(Flags)}</h2>
+        <h2>{"Mines left: " + String(Flags) + " " + String(correctGuess)}</h2>
       </div>
 
       <div className="centerItems">
         <div className="BOARD grid grid-rows-8 grid-cols-8">
           <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
         </div>
+      </div>
+      
+      <div className="centerItems">
+        <h2>{WIN}</h2>
+      </div>
+
+      <div className="centerItems">
+        <button className="Button" onClick={restart}>Restart</button>
       </div>
     </div>
   );

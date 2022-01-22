@@ -2,10 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.centerItems {
+  @apply flex justify-center items-center
+}
+
 .BOARD {
   @apply w-1/6 h-2/6 min-w-max
 }
 
-.centerItems {
-  @apply flex justify-center items-center
+.Button {
+  @apply bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 border border-blue-700 rounded
 }

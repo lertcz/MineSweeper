@@ -12,11 +12,11 @@ function Tile(props) {
         content = (props.value[3] === 0) ? null : props.value[3] // set it to be invisible else to neighbour count
         if(props.value[1]) {// draw bomb if discovered
             content = "💣"
+            if(props.value[3] === "💥") {
+                content = "💥"
+            }
         }
     }
-    /* else if(props.value[1]) { // draw bomb hehe
-        content = "💣"
-    } */
     else { // draw flag if the tile is flagged
         content = props.value[0] ? "🚩" : null
     }
