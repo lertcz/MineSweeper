@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-.text {
-  @apply text-red-900
+.BOARD {
+  @apply w-1/6 h-2/6 min-w-max
+}
+
+.centerItems {
+  @apply flex justify-center items-center
 }

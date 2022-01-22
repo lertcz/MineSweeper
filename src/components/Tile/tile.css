@@ -1,0 +1,11 @@
+.undiscovered {
+    @apply bg-gray-600
+}
+
+.discovered {
+    @apply bg-gray-200
+}
+
+.tile {
+    @apply w-8 h-8 p-1 rounded m-1
+}
