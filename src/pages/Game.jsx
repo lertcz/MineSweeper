@@ -214,7 +214,7 @@ function Game() {
   return (
     <div className="w-screen h-screen">
       
-      <div className="absolute bottom-3 right-3 align-middle"> {/* Creator info */}
+      <div className="fixed bottom-3 right-3 align-middle"> {/* Creator info */}
         <div className="centerItems flex-col">
           <span className="text-xs pl-4">
             Created by
