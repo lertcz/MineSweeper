@@ -33,6 +33,8 @@ const DIFFICULTY = [
   }
 ]
 
+let BOARD = DIFFICULTY[diffVal].style
+
 function valuetext(value) {
   diffVal = DIFFICULTY[value].value
   BOMBS = DIFFICULTY[value].bombs
@@ -144,6 +146,9 @@ function Game() {
   function restart() {
     let size = DIFFICULTY[diffVal].size
     let sum = size[0] * size[1]
+
+    BOARD = DIFFICULTY[diffVal].style
+
     setTiles(Array.from(Array(sum), () => Array.from([false, false, false, 0])))
     setFlags(BOMBS)
     setCG(0)
@@ -210,15 +215,19 @@ function Game() {
     <div className="w-screen h-screen">
       
       <div className="absolute bottom-3 right-3 align-middle"> {/* Creator info */}
-        <div className="centerItems">
+        <div className="centerItems flex-col">
+          <span className="text-xs pl-4">
+            Created by
+          </span>
+          
+          <span className="text-xs pl-4">
+            Michal Šesták
+          </span>
+
           <GitHubIcon
-          className="hover:scale-125"
+          className="hover:scale-125 translate-x-2.5"
           onClick={() => window.open("https://github.com/lertcz/MineSweeper")}
           />
-
-          <h1 className="text-xs pl-4">
-            Created by Michal Šesták
-          </h1>
         </div>
       </div>
 
@@ -231,7 +240,7 @@ function Game() {
       </div>
 
       <div className="centerItems"> {/* Board */}
-        <div className={DIFFICULTY[diffVal].style}>
+        <div className={BOARD}>
           <Board tiles={tiles} handleLeftClick={handleLeftClick} handleRightClick={handleRightClick} />
         </div>
       </div>

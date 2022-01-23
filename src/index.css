@@ -25,8 +25,7 @@
 
 /* flex-shrink-0 is to prevent horizontal scroll */
 .H { 
-  @apply BOARD scale-55 flex-shrink-0 grid grid-cols-16
-                                        lg:grid-cols-30  
+  @apply BOARD scale-55 grid grid-cols-30 /* 16? mobile */
 }
 
 .Button { 
